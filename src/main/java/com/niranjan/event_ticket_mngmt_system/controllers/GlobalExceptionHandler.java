@@ -1,6 +1,9 @@
 package com.niranjan.event_ticket_mngmt_system.controllers;
 
 import com.niranjan.event_ticket_mngmt_system.domain.dtos.ErrorDto;
+import com.niranjan.event_ticket_mngmt_system.exceptions.EventNotFoundException;
+import com.niranjan.event_ticket_mngmt_system.exceptions.EventUpdateException;
+import com.niranjan.event_ticket_mngmt_system.exceptions.TicketTypeNotFoundException;
 import com.niranjan.event_ticket_mngmt_system.exceptions.UserNotFoundException;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
@@ -14,6 +17,30 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler {
+
+    @ExceptionHandler(EventNotFoundException.class)
+    public ResponseEntity<ErrorDto> handleEventNotFoundException(EventNotFoundException e){
+        log.error("Caught Event not found exception", e);
+        ErrorDto errorDto = new ErrorDto();
+        errorDto.setMessage("Event not found");
+        return new ResponseEntity<>(errorDto, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(TicketTypeNotFoundException.class)
+    public ResponseEntity<ErrorDto> handleTicketTypeNotFoundException(TicketTypeNotFoundException e){
+        log.error("Caught Ticket type not found exception", e);
+        ErrorDto errorDto = new ErrorDto();
+        errorDto.setMessage("Ticket type not found");
+        return new ResponseEntity<>(errorDto, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(EventUpdateException.class)
+    public ResponseEntity<ErrorDto> handleEventUpdateException(EventUpdateException e){
+        log.error("Caught Event update exception", e);
+        ErrorDto errorDto = new ErrorDto();
+        errorDto.setMessage("Event update failed");
+        return new ResponseEntity<>(errorDto, HttpStatus.BAD_REQUEST);
+    }
 
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<ErrorDto> handleUserNotFoundException(UserNotFoundException e) {
